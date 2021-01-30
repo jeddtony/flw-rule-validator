@@ -1,5 +1,5 @@
 # flw-rule-validator
-This API is validates requests based on an expected format. 
+This API validates requests base on an expected format. 
 
 ### Setup
 Clone this repo and run the command
