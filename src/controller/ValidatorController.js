@@ -1,10 +1,7 @@
-const { restart } = require('nodemon');
-const { DEFAULT_ERROR_STATUS_CODE, DEFAULT_SUCCESS_STATUS_CODE } = require('./constants');
 
-const router = require('express').Router();
+const {errorInInputResponse, errorInValidationResponse, successResponse} = require('../helpers/responseHelper');
 
-router.get('/', (req, res) => {
-    // res.send('This works')
+exports.getIndex = async (req, res) => {
     return res.status(200).json({
         "message": "My Rule-Validation API",
         "status": "success",
@@ -16,15 +13,11 @@ router.get('/', (req, res) => {
             "twitter": "@JeddTony"
           }
     })
-});
+}
 
-
-router.post('/validate-rule', (req, res) => {
+exports.postValidate = async(req, res) => {
     let rule = req.body.rule;
     let data = req.body.data;
-
-  
-
 
 // Check if user input is correct
 let userInput = checkIfUserInputIsValid(rule, data);
@@ -94,20 +87,22 @@ let keyToValidate ;
                                
                             break;
              default:
-                 throw new Error('condition is required');
+                return res.status(400).json({
+                    "message": "Invalid condition passed.",
+                    "status": "error",
+                    "data": null
+                  });
                  break;
          }
      
-    
-    res.send(''+keyToValidate);
-});
-
-
+ 
+}
 
 const getValidationKey = (data, field) => {
     let fieldType = null
     let keyToValidate;
     fieldType = Number(field);
+    console.log(data);
 
     // Checks if it's an array 
 if(Array.isArray(data)){
@@ -138,56 +133,17 @@ else{
      throw new Error('Only 2 levels of nesting is accepted');
  }
  console.log('the fields are ', splittedFields);
- keyToValidate = data[splittedFields[0]][splittedFields[1]];
- fieldType = 'objecta';
+ if(data[splittedFields[0]]){
+    keyToValidate = data[splittedFields[0]][splittedFields[1]];
+ }
 }
-
 }
 console.log('the key to validate ', keyToValidate);
 return keyToValidate;
+
 }
 
 
-const errorInInputResponse = (res, message ) => {
-    return res.status(DEFAULT_ERROR_STATUS_CODE).json({
-        message,
-        "status": "error",
-        "data": null
-    })
-}
-
-
-const errorInValidationResponse = (res, message, field, fieldValue, condition, conditionValue ) => {
-    return res.status(DEFAULT_ERROR_STATUS_CODE).json({
-        message,
-        "status": "error",
-        "data": {
-            "validation": {
-            "error": false,
-            "field": field,
-            "field_value": fieldValue,
-            "condition": condition,
-            "condition_value": conditionValue
-        }
-        }
-    });
-}
-
-const successResponse = (res, message, field, fieldValue, condition, conditionValue) => {
-    return res.status(DEFAULT_SUCCESS_STATUS_CODE).json({
-        message,
-        "status": "success",
-        "data": {
-            "validation": {
-            "error": false,
-            "field": field,
-            "field_value": fieldValue,
-            "condition": condition,
-            "condition_value": conditionValue
-        }
-        }
-    });
-}
 
 const checkIfUserInputIsValid = (rule, data) => {
     if(!rule){
@@ -224,5 +180,3 @@ const isObject = (obj) => {
     console.log('what type ', Object.prototype.toString.call(obj) === '[object Object]');
     return Object.prototype.toString.call(obj) === '[object Object]';
 };
-
-module.exports = router;

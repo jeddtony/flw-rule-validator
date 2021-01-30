@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const route = require('./src/route');
+const route = require('./src/route/route');
 
 // Allow CORS for HTTP verb
 app.use((req, res, next) => {
