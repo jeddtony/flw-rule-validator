@@ -231,7 +231,7 @@ const checkIfUserInputIsValid = (rule, data) => {
   // Check if condition is valid
   let condition = rule.condition;
   if (typeof condition != "string") {
-    return { status: false, message: "condition should be a string" };
+    return { status: false, message: "condition should be a string." };
   }
   if (
     condition != "neq" &&
@@ -242,7 +242,7 @@ const checkIfUserInputIsValid = (rule, data) => {
   ) {
     return {
       status: false,
-      message: "condition should be neq or eq or gt or gte or contains",
+      message: "condition should be neq or eq or gt or gte or contains.",
     };
   }
 
