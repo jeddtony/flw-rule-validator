@@ -8,9 +8,6 @@ app.listen(process.env.PORT || 4003, function(err) {
 // Restarting the server
 const server = require('http').createServer(app);
 
-
-
-
 // Implementing graceful shutdown
 process.on('SIGINT', () => {
     console.info('SIGINT signal received.')
